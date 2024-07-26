@@ -111,7 +111,10 @@ class TestAuthentication(unittest.TestCase):
         )
         session = auth.signed_session()
         prep_req = session.prepare_request(self.request)
-        self.assertDictContainsSubset({'testheader' : 'testheadervalue'}, prep_req.headers)
+        self.assertLessEqual(
+            {'testheader': 'testheadervalue'}.items(),
+            prep_req.headers.items(),
+        )
 
         auth = ApiKeyCredentials(
             in_query={
@@ -126,19 +129,28 @@ class TestAuthentication(unittest.TestCase):
         auth = CognitiveServicesCredentials("mysubkey")
         session = auth.signed_session()
         prep_req = session.prepare_request(self.request)
-        self.assertDictContainsSubset({'Ocp-Apim-Subscription-Key' : 'mysubkey'}, prep_req.headers)
+        self.assertLessEqual(
+            {'Ocp-Apim-Subscription-Key': 'mysubkey'}.items(),
+            prep_req.headers.items(),
+        )
 
     def test_eventgrid_auth(self):
         auth = TopicCredentials("mytopickey")
         session = auth.signed_session()
         prep_req = session.prepare_request(self.request)
-        self.assertDictContainsSubset({'aeg-sas-key' : 'mytopickey'}, prep_req.headers)
+        self.assertLessEqual(
+            {'aeg-sas-key': 'mytopickey'}.items(),
+            prep_req.headers.items(),
+        )
 
     def test_eventgrid_domain_auth(self):
         auth = DomainCredentials("mydomainkey")
         session = auth.signed_session()
         prep_req = session.prepare_request(self.request)
-        self.assertDictContainsSubset({'aeg-sas-key' : 'mydomainkey'}, prep_req.headers)
+        self.assertLessEqual(
+            {'aeg-sas-key': 'mydomainkey'}.items(),
+            prep_req.headers.items(),
+        )
 
 if __name__ == '__main__':
     unittest.main()
